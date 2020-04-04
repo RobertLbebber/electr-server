@@ -1,0 +1,8 @@
+We are trying to get DebugController working with the database. We have to find out it the requests are being sent asyncronosly through ES6 or if we need Promise Crap.
+
+There will need to be a Object for API side and for Marshalling AWS Dynmodb Responses Object.
+There will need to be a Object for Frontend side for Marshalling AWS Dynmodb Request Object.
+
+Create a serializable means of having Refs and collections and all the Types
+
+Make all related transaction fail together.
