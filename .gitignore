@@ -1,0 +1,9 @@
+node_modules
+.dynamodb
+.serverless
+dist
+package-lock.json
+yarn.lock
+credentials.csv
+logs
+src/config/secrets.json.js

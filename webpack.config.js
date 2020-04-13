@@ -4,10 +4,14 @@ var fs = require("fs");
 module.exports = {
   entry: fs
     .readdirSync(path.join(__dirname, "./endpoints"))
-    .filter(filename => /\.js$/.test(filename))
-    .map(filename => {
+    .filter((filename) => /\.js$/.test(filename))
+    .map((filename) => {
       var entry = {};
-      entry[filename.replace(".js", "")] = path.join(__dirname, "./endpoints/", filename);
+      entry[filename.replace(".js", "")] = path.join(
+        __dirname,
+        "./endpoints/",
+        filename
+      );
       return entry;
     })
     .reduce((finalObject, entry) => Object.assign(finalObject, entry), {}),
@@ -24,17 +28,25 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: "babel-loader",
-        query: JSON.parse(fs.readFileSync(path.join(__dirname, ".babelrc"), { encoding: "utf8" })),
+        query: JSON.parse(
+          fs.readFileSync(path.join(__dirname, ".babelrc"), {
+            encoding: "utf8",
+          })
+        ),
       },
       {
         test: /\.json$/,
         exclude: /node_modules/,
         loader: "json-loader",
       },
+      {
+        test: /\.dbon$/,
+        loader: "json-loader",
+      },
     ],
   },
   resolve: {
-    extensions: [".js", ".vue", ".json"],
+    extensions: [".js", ".vue", ".json", ".dbon"],
     alias: { "@": path.resolve(__dirname, "src") },
   },
 };

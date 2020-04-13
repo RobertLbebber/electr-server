@@ -13,6 +13,8 @@ import WebError, {
 import env, { DEVELOPMENT } from "../../config/env";
 import AccountSingleton from "../../db/models/Account.json";
 import SessionsSingleton from "../../db/models/Sessions.json.js";
+import { ApiCatalog } from "electr-common";
+const Session = ApiCatalog.Categories.Session;
 
 class SessionsController extends GenericController {}
 
@@ -24,7 +26,7 @@ let init = new SessionsController()
   .create("createSession")
   .post()
   .open()
-  .path("session")
+  .path(Session.POST)
   .request(Requests.SESSION_CREATE)
   .fn(async (event, context, endpoint) => {
     const Sessions = SessionsSingleton.getInstance();
@@ -39,7 +41,11 @@ let init = new SessionsController()
       if (!_.isNil(existingSession)) {
         return ResponseStatus();
       } else {
-        return ResponseStatus(false, "Unable To Create Session", DATABASE_FAILURE);
+        return ResponseStatus(
+          false,
+          "Unable To Create Session",
+          DATABASE_FAILURE
+        );
       }
     } else {
       let existingAccount = await Account.fn.scan({
@@ -48,11 +54,17 @@ let init = new SessionsController()
       });
 
       if (!_.isNil(existingAccount)) {
-        let existingSession = await Sessions.fn.create({ accountId: existingAccount.id });
+        let existingSession = await Sessions.fn.create({
+          accountId: existingAccount.id,
+        });
         if (!_.isNil(existingSession)) {
           return ResponseStatus();
         } else {
-          return ResponseStatus(false, "Unable To Create Session", DATABASE_FAILURE);
+          return ResponseStatus(
+            false,
+            "Unable To Create Session",
+            DATABASE_FAILURE
+          );
         }
       } else {
         return ResponseStatus(false, "No Existing Account Found", NOT_FOUND);
@@ -62,7 +74,7 @@ let init = new SessionsController()
 
   //GET Check user's session
   .create("checkSession")
-  .path("session")
+  .path(Session.GET)
   .open()
   .fn(async (event, context) => {
     throw new WebError();
@@ -72,7 +84,7 @@ let init = new SessionsController()
   //Destroy user's session
   .create("destroySession")
   .deleter()
-  .path("session")
+  .path(Session.DELETE)
   .request(Requests.SESSION_DELETE)
   .fn(async (event, context) => {
     return ResponseStatus(false, middles, NOT_IMPLEMENTED);
@@ -82,14 +94,23 @@ let init = new SessionsController()
   .create("newUser")
   .put()
   .open()
-  .path("session")
+  .path(Session.PUT)
   .request(Requests.SESSION_NEW)
   .fn(async (event, context) => {
     let formData = _.get(JSON.parse(event.body), "formData");
     if (_.get(formData, "password") !== _.get(formData, "confirmation")) {
-      return ResponseStatus(false, "Invalid Password Combination", INVALID_INPUT);
+      return ResponseStatus(
+        false,
+        "Invalid Password Combination",
+        INVALID_INPUT
+      );
     }
-    let accountModel = AccountGn(formData.fName, formData.lName, formData.emailAddress, formData.password);
+    let accountModel = AccountGn(
+      formData.fName,
+      formData.lName,
+      formData.emailAddress,
+      formData.password
+    );
 
     try {
       let crudResponse = await Account.fn.create(accountModel);

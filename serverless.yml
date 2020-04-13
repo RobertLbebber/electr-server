@@ -17,19 +17,19 @@ functions:
     handler: dist/endpoints/Account/AccountController.getMe
     events:
       - http:
-          path: account/getMe
+          path: /api/account/getMe
           method: get
   AccountController-getAccountPage:
     handler: dist/endpoints/Account/AccountController.getAccountPage
     events:
       - http:
-          path: 'account/{accountId}/page'
+          path: '/api/account/{accountId}/page'
           method: get
   AccountController-setAccountPage:
     handler: dist/endpoints/Account/AccountController.setAccountPage
     events:
       - http:
-          path: 'account/{accountId}/page'
+          path: '/api/account/{accountId}/page'
           method: post
   AccountController-getFeed:
     handler: dist/endpoints/Account/AccountController.getFeed
@@ -47,13 +47,13 @@ functions:
     handler: dist/endpoints/Account/AccountController.addAccount
     events:
       - http:
-          path: account/new
+          path: /api/account/new
           method: post
   AccountController-getAll:
     handler: dist/endpoints/Account/AccountController.getAll
     events:
       - http:
-          path: account/all
+          path: /api/account/all
           method: get
   AccountController-runQuery:
     handler: dist/endpoints/Account/AccountController.runQuery
@@ -101,25 +101,25 @@ functions:
     handler: dist/endpoints/Sessions/SessionsController.createSession
     events:
       - http:
-          path: session
+          path: /api/session
           method: post
   SessionsController-checkSession:
     handler: dist/endpoints/Sessions/SessionsController.checkSession
     events:
       - http:
-          path: session
+          path: /api/session
           method: get
   SessionsController-destroySession:
     handler: dist/endpoints/Sessions/SessionsController.destroySession
     events:
       - http:
-          path: session
+          path: /api/session
           method: delete
   SessionsController-newUser:
     handler: dist/endpoints/Sessions/SessionsController.newUser
     events:
       - http:
-          path: session
+          path: /api/session
           method: put
 provider:
   name: aws
