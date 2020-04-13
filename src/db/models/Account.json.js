@@ -1,83 +1,61 @@
-import env from "../../config/env";
-import {
-  TYPES,
-  required,
-  unique,
-  createRef,
-  createCollection,
-  encrypted
-} from "./common/Attributes";
-import SingletonGenerator from "../../endpoints/_common/SingletonGenerator";
-import EmailAccountSingleton from "./EmailAccount.json";
-import CommonModel from "./common/CommonModel";
-import CommonDoc from "./common/CommonDoc";
+// import { DatabaseSchemas } from "electr-common";
+// import env from "../../config/env";
+// // import {
+// //   TYPES,
+// //   required,
+// //   unique,
+// //   createRef,
+// //   createCollection,
+// //   encrypted
+// // } from "./common/Attributes";
+// import SingletonGenerator from "../../endpoints/_common/GenerateSingleton";
+// // import EmailAccountSingleton from "./EmailAccount.json";
+// import CommonModel from "./common/GenerateModel";
+// import CommonDoc from "./common/CommonDoc";
 
-const TableName = "Account";
+// // const AccountDBON = DatabaseSchemas.AccountDBON;
+// const TableName = "Account";
 
 export const AccountGn = (firstName, lastName, primaryEmail, password) => ({
   firstName,
   lastName,
   primaryEmail,
-  password
+  password,
 });
 
-class Model extends CommonModel {
-  constructor() {
-    super(TableName);
-    this.properties = {
-      ...this.properties,
-      //Required
-      password: { type: TYPES.STRING, required, encrypted },
-      firstName: { type: TYPES.STRING, required },
-      lastName: { type: TYPES.STRING, required },
+// class Model extends CommonModel {
+//   constructor() {
+//     super(TableName);
+//   }
+// }
 
-      //Options
-      profileImg: { type: TYPES.STRING },
-      messages: { collection: "messages", via: "accountId" },
-      creditCard: { collection: "creditCards", via: "accountId" }
-    };
-  }
+// export const Table = {
+//   Type: env.mainDB,
+//   DeletionPolicy: env.deletionPolicy,
+//   Properties: {
+//     TableName: env.tableName(TableName),
+//     KeySchema: [
+//       {
+//         AttributeName: "id",
+//         KeyType: "HASH",
+//       },
+//     ],
+//     AttributeDefinitions: [
+//       {
+//         AttributeName: "id",
+//         AttributeType: "S",
+//       },
+//     ],
+//     ProvisionedThroughput: {
+//       ReadCapacityUnits: 1,
+//       WriteCapacityUnits: 1,
+//     },
+//   },
+// };
 
-  init() {
-    //Connections
-    this.properties.primaryEmail = createRef(
-      EmailAccountSingleton.getInstance(),
-      { required, unique }
-    );
-    this.properties.emails = createCollection(
-      EmailAccountSingleton.getInstance()
-    );
-  }
-}
-
-export const Table = {
-  Type: env.mainDB,
-  DeletionPolicy: env.deletionPolicy,
-  Properties: {
-    TableName: env.tableName(TableName),
-    KeySchema: [
-      {
-        AttributeName: "id",
-        KeyType: "HASH"
-      }
-    ],
-    AttributeDefinitions: [
-      {
-        AttributeName: "id",
-        AttributeType: "S"
-      }
-    ],
-    ProvisionedThroughput: {
-      ReadCapacityUnits: 1,
-      WriteCapacityUnits: 1
-    }
-  }
-};
-
-const AccountSingleton = new SingletonGenerator(Model);
-export default AccountSingleton;
-export class AccountDoc extends CommonDoc {
-  constructor(identity) {
-    super(AccountSingleton.getInstance(), identity);
-  }
-}
+// export default AccountSingleton;
+// export class AccountDoc extends CommonDoc {
+//   constructor(identity) {
+//     super(AccountSingleton.getInstance(), identity);
+//   }
+// }

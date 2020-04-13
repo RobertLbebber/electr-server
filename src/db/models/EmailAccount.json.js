@@ -2,7 +2,7 @@ import _ from "lodash";
 import env from "../../config/env";
 import { TYPES, required, unique, createSoftRef } from "./common/Attributes";
 import AccountSingleton from "./Account.json";
-import SingletonGenerator from "../../endpoints/_common/SingletonGenerator";
+import SingletonGenerator from "../../endpoints/_common/GenerateSingleton";
 import CommonModel from "./common/CommonModel";
 import CommonDoc from "./common/CommonDoc";
 
@@ -15,7 +15,7 @@ class Model extends CommonModel {
     this.properties = _.omit(this.properties, "id");
     this.properties = {
       ...this.properties,
-      email: { type: TYPES.STRING, required, unique }
+      email: { type: TYPES.STRING, required, unique },
       /**
        * Connections
        * @property {SoftRef} accountId-
@@ -25,7 +25,7 @@ class Model extends CommonModel {
 
   init() {
     this.properties.accountID = createSoftRef(AccountSingleton.getInstance(), {
-      unique
+      unique,
     });
   }
 }
@@ -38,20 +38,20 @@ export const Table = {
     KeySchema: [
       {
         AttributeName: "email",
-        KeyType: "HASH"
-      }
+        KeyType: "HASH",
+      },
     ],
     AttributeDefinitions: [
       {
         AttributeName: "email",
-        AttributeType: "S"
-      }
+        AttributeType: "S",
+      },
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 1,
-      WriteCapacityUnits: 1
-    }
-  }
+      WriteCapacityUnits: 1,
+    },
+  },
 };
 
 const EmailAccountSingleton = new SingletonGenerator(Model);

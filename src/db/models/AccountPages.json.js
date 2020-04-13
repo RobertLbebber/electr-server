@@ -1,7 +1,7 @@
 import Attributes, { TYPES, createRef, required } from "./common/Attributes";
 import env from "../../config/env";
 import CommonDBCrud from "../oper/CommonDBCrud";
-import SingletonGenerator from "../../endpoints/_common/SingletonGenerator";
+import SingletonGenerator from "../../endpoints/_common/GenerateSingleton";
 import AccountSingleton from "./Account.json.js";
 import CommonDoc from "./common/CommonDoc";
 
@@ -15,7 +15,7 @@ class Model {
       serial: { type: TYPES.STRING },
       designName: { type: TYPES.STRING },
       designCategory: { type: TYPES.STRING },
-      pageContent: { type: TYPES.OBJECT, ...required }
+      pageContent: { type: TYPES.OBJECT, ...required },
     };
     this.fn = CommonDBCrud(this, TableName);
   }
@@ -32,20 +32,20 @@ export const Table = {
     KeySchema: [
       {
         AttributeName: "id",
-        KeyType: "HASH"
-      }
+        KeyType: "HASH",
+      },
     ],
     AttributeDefinitions: [
       {
         AttributeName: "id",
-        AttributeType: "S"
-      }
+        AttributeType: "S",
+      },
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 1,
-      WriteCapacityUnits: 1
-    }
-  }
+      WriteCapacityUnits: 1,
+    },
+  },
 };
 // updateOrCreate: function(criteria, values) {
 //   var self = this; // reference for use by callbacks

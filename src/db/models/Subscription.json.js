@@ -1,6 +1,6 @@
 import Attributes, { TYPES, createRef } from "./common/Attributes";
 import env from "../../config/env";
-import SingletonGenerator from "../../endpoints/_common/SingletonGenerator";
+import SingletonGenerator from "../../endpoints/_common/GenerateSingleton";
 import CommonDBCrud from "../oper/CommonDBCrud";
 import AccountSingleton from "./Account.json";
 import CommonDoc from "./common/CommonDoc";
@@ -12,7 +12,7 @@ class Model {
     this.pK = "id";
     this.properties = {
       ...Attributes,
-      serial: { type: TYPES.STRING }
+      serial: { type: TYPES.STRING },
     };
     this.fn = CommonDBCrud(this, TableName);
   }
@@ -31,20 +31,20 @@ export const Table = {
     KeySchema: [
       {
         AttributeName: "id",
-        KeyType: "HASH"
-      }
+        KeyType: "HASH",
+      },
     ],
     AttributeDefinitions: [
       {
         AttributeName: "id",
-        AttributeType: "S"
-      }
+        AttributeType: "S",
+      },
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 1,
-      WriteCapacityUnits: 1
-    }
-  }
+      WriteCapacityUnits: 1,
+    },
+  },
 };
 
 const Subscription = new SingletonGenerator(Model);

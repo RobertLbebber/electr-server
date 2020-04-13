@@ -2,7 +2,7 @@ import Attributes, { createRef, required, unique } from "./common/Attributes";
 import env from "../../config/env";
 import CommonDBCrud from "../oper/CommonDBCrud";
 import { TYPES } from "./common/Attributes";
-import SingletonGenerator from "../../endpoints/_common/SingletonGenerator";
+import SingletonGenerator from "../../endpoints/_common/GenerateSingleton";
 import AccountSingleton from "./Account.json";
 import CommonDoc from "./common/CommonDoc";
 
@@ -16,14 +16,14 @@ class Model {
       mainMessage: { type: TYPES.STRING },
       extraMessage: { type: TYPES.STRING },
       likes: { type: TYPES.NUMBER },
-      shares: { type: TYPES.NUMBER }
+      shares: { type: TYPES.NUMBER },
     };
     this.fn = CommonDBCrud(this, TableName);
   }
   init() {
     this.properties.accountID = createRef(AccountSingleton.getInstance(), {
       required,
-      unique
+      unique,
     });
   }
 }
@@ -36,20 +36,20 @@ export const Table = {
     KeySchema: [
       {
         AttributeName: "id",
-        KeyType: "HASH"
-      }
+        KeyType: "HASH",
+      },
     ],
     AttributeDefinitions: [
       {
         AttributeName: "id",
-        AttributeType: "S"
-      }
+        AttributeType: "S",
+      },
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 1,
-      WriteCapacityUnits: 1
-    }
-  }
+      WriteCapacityUnits: 1,
+    },
+  },
 };
 // /**
 //  * Increment or Decrement the an action of the message

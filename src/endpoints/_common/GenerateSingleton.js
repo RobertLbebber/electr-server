@@ -1,6 +1,6 @@
 import WebError, { NOT_INSTANTIATED } from "../../io/HttpErrors";
 
-export default class SingletonGenerator {
+export default class GenerateSingleton {
   /**
    * @param {Class} Model - Blueprint of the Model to be created into a Singleton
    */

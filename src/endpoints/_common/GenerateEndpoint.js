@@ -1,11 +1,20 @@
 import _ from "lodash";
 import { Validator } from "jsonschema";
-import ResponseStatus, { GET, POST, PUT, DELETE } from "../../io/ResponseStatus";
-import WebError, { SERVER_UNKNOWN, SERVER_DEFAULT, SERVICE_NOT_AVAILABLE } from "../../io/HttpErrors";
+import ResponseStatus, {
+  GET,
+  POST,
+  PUT,
+  DELETE,
+} from "../../io/ResponseStatus";
+import WebError, {
+  SERVER_UNKNOWN,
+  SERVER_DEFAULT,
+  SERVICE_NOT_AVAILABLE,
+} from "../../io/HttpErrors";
 import Middleware from "../../middleware/Middleware";
 import env, { DEVELOPMENT } from "../../config/env";
 
-export default class GenerateController {
+export default class GenerateEndpoint {
   constructor(name, controller) {
     //Essentials
     this._controller = controller;
@@ -28,7 +37,7 @@ export default class GenerateController {
     this._models = controller.models;
   }
 
-  static init = (name, controller) => new GenerateController(name, controller);
+  static init = (name, controller) => new GenerateEndpoint(name, controller);
 
   toJSON() {
     return {
@@ -60,7 +69,7 @@ export default class GenerateController {
    * @typedef {Function} fn - Endpoint Function to be called on
    *  @property {AWS.Event} event -
    *  @property {AWS.Context} context -
-   *  @property {GenerateController} endpoint -
+   *  @property {GenerateEndpoint} endpoint -
    *  @property {GenericController} globals -
    *
    * @returns {GenericController}
@@ -72,15 +81,23 @@ export default class GenerateController {
     this._controller.endpoints[this._name] = parsedStream;
 
     if (_.isNil(this._controller.endpoints[this._name].fn)) {
-      throw new Error("GenerateController miss required Property: 'fn'");
+      throw new Error("GenerateEndpoint miss required Property: 'fn'");
     } else {
       //Extending the Provided Function with Middleware and Endware
-      this._controller.endpoints[this._name].fn = async (event, context, callback) => {
+      this._controller.endpoints[this._name].fn = async (
+        event,
+        context,
+        callback
+      ) => {
         try {
           //Handling Middleware
           let middles = await Middleware.prep(event, context, parsedStream);
           if (!middles.ok) {
-            return ResponseStatus(middles.ok, middles, _.get(middles, "errorCode", SERVER_DEFAULT));
+            return ResponseStatus(
+              middles.ok,
+              middles,
+              _.get(middles, "errorCode", SERVER_DEFAULT)
+            );
           }
 
           /**
@@ -90,8 +107,16 @@ export default class GenerateController {
         } catch (error) {
           let isWebError = !_.isNil(error.code);
           //Endware Handling Errors
-          console.error(`! ${error.name}[${isWebError ? error.code : SERVER_UNKNOWN}] - ${error.message}`);
-          return ResponseStatus(false, error.message, isWebError ? error.code : SERVER_UNKNOWN);
+          console.error(
+            `! ${error.name}[${isWebError ? error.code : SERVER_UNKNOWN}] - ${
+              error.message
+            }`
+          );
+          return ResponseStatus(
+            false,
+            error.message,
+            isWebError ? error.code : SERVER_UNKNOWN
+          );
         }
       };
     }
@@ -123,7 +148,8 @@ export default class GenerateController {
   }
 
   request(request) {
-    this._request = event => new Validator().validate(JSON.parse(event.body), request);
+    this._request = (event) =>
+      new Validator().validate(JSON.parse(event.body), request);
     return this;
   }
 
@@ -132,7 +158,8 @@ export default class GenerateController {
    * @param {Object| Object[]} response
    */
   response(response) {
-    this._response = event => new Validator().validate(JSON.parse(event.body), { oneOf: response });
+    this._response = (event) =>
+      new Validator().validate(JSON.parse(event.body), { oneOf: response });
     return this;
   }
 

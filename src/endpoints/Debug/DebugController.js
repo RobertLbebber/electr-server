@@ -1,4 +1,4 @@
-import { Models as RawModels } from "../../db/models/_export.json.js";
+import { Models as RawModels } from "../../db/models/Docs.js";
 import ResponseStatus, { POST, GET, DELETE } from "../../io/ResponseStatus";
 import GenerateHandler from "../_common/GenerateHandler";
 import { GenericController } from "../_common/GenericController.js";
@@ -69,8 +69,8 @@ for (let controllerName in RawModels) {
       publicFuncName,
       "/" + controllerName + "/debug/" + funcName,
       false,
-      postGets[funcName].method,
-    )(async event => {
+      postGets[funcName].method
+    )(async (event) => {
       let result = await postGets[funcName].crud(event, functions[funcName]);
       return ResponseStatus(true, result);
     });

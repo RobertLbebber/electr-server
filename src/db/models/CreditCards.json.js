@@ -1,7 +1,7 @@
 import env from "../../config/env";
 import Attributes, { TYPES, createRef } from "./common/Attributes";
 import CommonDBCrud from "../oper/CommonDBCrud";
-import SingletonGenerator from "../../endpoints/_common/SingletonGenerator";
+import SingletonGenerator from "../../endpoints/_common/GenerateSingleton";
 import AccountSingleton from "./Account.json";
 import CommonDoc from "./common/CommonDoc";
 
@@ -16,7 +16,7 @@ class Model {
       cardNumber: { type: TYPES.NUMBER },
       expMonth: { type: TYPES.NUMBER },
       expYear: { type: TYPES.NUMBER },
-      cvv: { type: TYPES.NUMBER }
+      cvv: { type: TYPES.NUMBER },
       /**
        * Connecitions
        * @property {Ref} accountId - Connection Reference to a given account
@@ -38,20 +38,20 @@ export const Table = {
     KeySchema: [
       {
         AttributeName: "id",
-        KeyType: "HASH"
-      }
+        KeyType: "HASH",
+      },
     ],
     AttributeDefinitions: [
       {
         AttributeName: "id",
-        AttributeType: "S"
-      }
+        AttributeType: "S",
+      },
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 1,
-      WriteCapacityUnits: 1
-    }
-  }
+      WriteCapacityUnits: 1,
+    },
+  },
 };
 
 const CreditCards = new SingletonGenerator(Model);

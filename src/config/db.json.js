@@ -1,9 +1,9 @@
 import _ from "lodash";
-import Models from "../db/models/_export.json";
+import { Tables } from "../db/models/GenerateTables";
 let db = {
   resources: {
-    Resources: Models
-  }
+    Resources: Tables,
+  },
 };
 
 export default db;

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Collection, Ref, SoftRef } from "./Types";
+import { Collection, StrictLink, LooseLink } from "./Types";
 
 export const unique = true;
 export const encrypted = true;
@@ -23,22 +23,22 @@ export const TYPES = {
   STRING: { name: "String", dbType: "S" },
   SET: { name: "Set", dbType: "SS" },
   //Association Groupings
-  REF: new Ref(null, false),
-  SOFT_REF: new SoftRef(null, false),
+  STRICT_LINK: new StrictLink(null, false),
+  LOOSE_LINK: new LooseLink(null, false),
   COLLECTION: new Collection(),
 };
 export const CONNECTION_LIST = [
-  TYPES.REF.constructor.name,
-  TYPES.SOFT_REF.constructor.name,
+  TYPES.STRICT_LINK.constructor.name,
+  TYPES.LOOSE_LINK.constructor.name,
   TYPES.COLLECTION.constructor.name,
 ];
 
-export const createRef = (foriegnModel, other) => {
-  return { type: new Ref(foriegnModel), ...other };
+export const createStrictLink = (foriegnModel, other) => {
+  return { type: new StrictLink(foriegnModel), ...other };
 };
 
-export const createSoftRef = (foriegnModel, other) => {
-  return { type: new SoftRef(foriegnModel), ...other };
+export const createLooseLink = (foriegnModel, other) => {
+  return { type: new LooseLink(foriegnModel), ...other };
 };
 
 export const createCollection = (foriegnModel, other) => {

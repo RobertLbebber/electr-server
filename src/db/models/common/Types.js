@@ -2,6 +2,12 @@ import _ from "lodash";
 import WebError, { DATABASE_REJECTION } from "../../../io/HttpErrors";
 
 /**
+ * @NOTE the viaField and the Foreign Key aren't being used yet. These should be considered, when crud
+ * based on fields that are not the primary key. Most relevant for collections or with links on other
+ * unique Fields
+ */
+
+/**
  *
  * @param {*} entryExist
  * @param {*} refId
@@ -19,37 +25,28 @@ const checkDetection = (entryExist, refId, foreignModel) => {
   }
 };
 
-export class Ref {
+export class StrictLink {
   dbType = "B";
   /**
    * @param {Model} foreigner - reference to an instance of a foreign model
    * @param {String} connection - property being used for connecting the models
    */
-  constructor(foreigner, validate = true) {
+  constructor(foreigner, viaField = foreigner.pK) {
     // console.log("Types.js", foreigner);
     if (validate) {
       this.foreignModel = foreigner;
-      this.foreignKey = foreigner.pK;
+      this.foreignKey = viaField;
       if (_.isNil(this.foreignModel)) {
-        throw new WebError(
-          DATABASE_REJECTION,
-          "No foriegn Model provided for Reference"
-        );
+        throw new WebError(DATABASE_REJECTION, "No foriegn Model provided for Reference");
       }
     }
   }
 
   async validator(refId) {
     if (_.isNil(this.foreignModel)) {
-      throw new WebError(
-        DATABASE_REJECTION,
-        "No foriegn Model provided for Reference"
-      );
+      throw new WebError(DATABASE_REJECTION, "No foriegn Model provided for Reference");
     } else if (_.isNil(refId)) {
-      throw new WebError(
-        DATABASE_REJECTION,
-        "Foreign Model lacks identification for Reference"
-      );
+      throw new WebError(DATABASE_REJECTION, "Foreign Model lacks identification for Reference");
     }
     let entryExist = await this.foreignModel.fn.get(refId);
     checkDetection(entryExist, refId, this.foreignModel);
@@ -61,32 +58,26 @@ export class Ref {
 /**
  * Doesn't Require
  */
-export class SoftRef {
+export class LooseLink {
   dbType = "B";
   /**
    * @param {Model} foreigner - reference to an instance of a foreign model
    * @param {String} connection - property being used for connecting the models
    */
-  constructor(foreigner, validate = true) {
+  constructor(foreigner, viaField = foreigner.pK) {
     if (validate) {
       this.foreignModel = foreigner;
-      this.foreignKey = foreigner.pK;
+      this.foreignKey = viaField;
       this.locked = false;
       if (_.isNil(this.foreignModel)) {
-        throw new WebError(
-          DATABASE_REJECTION,
-          "No foriegn Model provided for Reference"
-        );
+        throw new WebError(DATABASE_REJECTION, "No foriegn Model provided for Reference");
       }
     }
   }
 
   async validator(refId) {
     if (_.isNil(this.foreignModel)) {
-      throw new WebError(
-        DATABASE_REJECTION,
-        "No foriegn Model provided for Reference"
-      );
+      throw new WebError(DATABASE_REJECTION, "No foriegn Model provided for Reference");
     } else if (_.isNil(refId)) {
       throw new WebError("Foreign Model lacks identification for Reference");
     }
@@ -105,7 +96,7 @@ export class Collection {
   /**
    * @param {Model} foreigner - reference to an instance of a foreign model
    */
-  constructor(foreigner, self) {
+  constructor(foreigner, viaField = foreigner.pK) {
     // if (_.isNil(foreigner)) {
     //   throw new Error("No foriegn Model provided for Reference");
     // } else if (_.isNil(foreigner.primaryId)) {
@@ -116,5 +107,5 @@ export class Collection {
     // let type = foreigner.primaryId.type;
     // let id = foreigner.primaryId;
   }
-  async validator(refId) {}
+  async validator(refIds) {}
 }
