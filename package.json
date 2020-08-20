@@ -57,7 +57,7 @@
   "dependencies": {
     "@babel/runtime": "^7.4.4",
     "aws-sdk": "^2.437.0",
-    "bcrypt": "^3.0.7",
+    "bcrypt": "^5.0.0",
     "chokidar": "^3.3.1",
     "dynamodb": "^1.2.0",
     "electr-common": "^0.1.10",
