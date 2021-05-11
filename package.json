@@ -62,7 +62,7 @@
     "dynamodb": "^1.2.0",
     "electr-common": "^0.1.10",
     "jsonschema": "^1.2.4",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "uuid": "^2.0.3"
   }
