@@ -63,7 +63,7 @@
     "electr-common": "^0.1.10",
     "jsonschema": "^1.2.4",
     "lodash": "^4.17.11",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "uuid": "^2.0.3"
   }
 }
